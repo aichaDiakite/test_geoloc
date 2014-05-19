@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Leaflet mobile example</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+		<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="assets/leaflet/leaflet.js"></script>
+		<script src="js/csvjson.js"></script>
+		<link rel="stylesheet" href="assets/leaflet/leaflet.css" />
+
+		<style>
+			body {
+				padding: 0;
+				margin: 0;
+			}
+			html, body, #map {
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="map">
+			g&eacute;olocalisation en cours...
+		</div>
+
+		<script>
+		$.ajaxSetup({
+			async : false
+		});
+		Array.prototype.unset = function(val)
+			{
+				var index = this.indexOf(val)
+				if (index > -1)
+				{
+					this.splice(index, 1)
+				}
+			}
+			
+			var coordonnees;
+			$.ajax("test.csv", {
+		    success: function(data) {
+		        coordonnees = csvjson.csv2json(data);
+		        coordonnees = coordonnees.rows;
+		        //alert(JSON.stringify(coordonnees));
+		    },
+		    error: function() {
+		        alert("Impossible de convertir le fichier CSV");
+		    }
+		});
+		
+		//alert(JSON.stringify(coordonnees));
+		
+			var cityTilesLayer = L.tileLayer('MapQuest/{z}/{x}/{y}.jpg',
+			{
+				maxZoom : 15,
+				minZoom : 12
+			});
+			var southWest = new L.LatLng(49.553726, 2.988281);
+			var northEast = new L.LatLng(49.724479, 3.339843);
+			var cityBounds = new L.LatLngBounds(southWest, northEast);
+
+			var zone_lat = 0.000226;
+			var zone_lon = 0.00034325;
+
+		/*var p1 = new L.LatLng(49.659325,3.297375);
+		var p2 = new L.LatLng(49.6594166666667,3.29726388888889);
+		var p3 = new L.LatLng(49.6669972222222,3.29610277777778);
+		var p4 = new L.LatLng(49.6460416666667,3.29432777777778);
+		var p5 = new L.LatLng(49.655875,3.29155277777778);
+		var p6 = new L.LatLng(49.6710805555556,3.27836944444444);
+		var p7 = new L.LatLng(49.68675,3.238675);
+		var p8 = new L.LatLng(49.6886638888889,3.22115277777778);
+		var p9 = new L.LatLng(49.6762472222222,3.25720833333333);
+		var p10 = new L.LatLng(49.6916083333333,3.27946388888889);
+		var p11 = new L.LatLng(49.6582222222222,3.20596111111111);
+		var p12 = new L.LatLng(49.6700472222222,3.15842222222222);
+		var p13 = new L.LatLng(49.6758583333333,3.15093888888889);
+		var p14 = new L.LatLng(49.6794444444444,3.16000277777778);
+		var p15 = new L.LatLng(49.6794555555556,3.16009166666667);
+		var p16 = new L.LatLng(49.6777611111111,3.15254722222222);
+		var p17 = new L.LatLng(49.6857527777778,3.155425);
+		var p18 = new L.LatLng(49.6913138888889,3.12982777777778);
+		var p19 = new L.LatLng(49.6764611111111,3.11215277777778);
+		var p20 = new L.LatLng(49.6467944444444,3.11934444444444);
+		var p21 = new L.LatLng(49.6590611111111,3.15936666666667);
+		var p22 = new L.LatLng(49.6508666666667,3.15380555555556);
+		var p23 = new L.LatLng(49.6431722222222,3.15453333333333);
+		var p24 = new L.LatLng(49.6392722222222,3.15834722222222);
+		var p25 = new L.LatLng(49.6291166666667,3.14833611111111);
+		var p26 = new L.LatLng(49.6192444444444,3.15980277777778);
+		var p27 = new L.LatLng(49.599325,3.15204166666667);
+		var p28 = new L.LatLng(49.5960638888889,3.18000555555555);
+		var p29 = new L.LatLng(49.6106944444445,3.19483055555555);
+		var p30 = new L.LatLng(49.6163333333333,3.21929166666667);
+		var p31 = new L.LatLng(49.6152444444444,3.21896944444444);
+		var p32 = new L.LatLng(49.5981944444445,3.25327777777778);
+		var p33 = new L.LatLng(49.5733194444445,3.333475);
+		var p34 = new L.LatLng(49.6122138888889,3.30541388888889);
+		var p35 = new L.LatLng(49.6305361111111,3.280575);
+		var p36 = new L.LatLng(49.6361694444444,3.28055833333333);
+		var p37 = new L.LatLng(49.630625,3.24490277777778);
+		var p38 = new L.LatLng(49.6584888888889,3.30753888888889);
+		var p39 = new L.LatLng(49.6571666666667,3.30750277777778);
+		var p40 = new L.LatLng(49.6556055555556,3.30887777777778);*/
+		
+		var p1;var p5;var p9;var p13;var p17;var p21;var p25;var p29;var p33;var p37;
+		var p2;var p6;var p10;var p14;var p18;var p22;var p26;var p30;var p34;var p38;
+		var p3;var p7;var p11;var p15;var p19;var p23;var p27;var p31;var p35;var p39;
+		var p4;var p8;var p12;var p16;var p20;var p24;var p28;var p32;var p36;var p40;
+		
+		var i = 0;
+		while(i < 40)
+		{
+			var _point = coordonnees[i];
+			set(('p'+(i+1)),new L.LatLng(parseFloat(_point.Latitude.replace(',','.')),parseFloat(_point.Longitude.replace(',','.'))));
+			i++;
+		}
+		
+		var marker1;var marker5;var marker9;var marker13;var marker17;var marker21;var marker25;var marker29;var marker33;var marker37;
+		var marker2;var marker6;var marker10;var marker14;var marker18;var marker22;var marker26;var marker30;var marker34;var marker38;
+		var marker3;var marker7;var marker11;var marker15;var marker19;var marker23;var marker27;var marker31;var marker35;var marker39;
+		var marker4;var marker8;var marker12;var marker16;var marker20;var marker24;var marker28;var marker32;var marker36;var marker40;
+
+			var greenIcon = L.icon(
+			{
+				iconUrl : 'point_marker.gif',
+
+				iconSize : [14, 14], // size of the icon
+				iconAnchor : [7, 7], // point of the icon which will correspond to marker's location
+				popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+			});
+			
+			window.L_DISABLE_3D = true;
+			L.Browser.webkit3d = false;
+			var options =
+			{
+				maxBounds : cityBounds,
+				zoomAnimation : false,
+				fadeAnimation : false,
+				markerZoomAnimation : false,
+				attributionControl : false
+			};
+			var map = L.map('map', options);
+			cityTilesLayer.addTo(map);
+			var i = 1;
+			while(i <= 40)
+			{
+				set('marker'+i,L.marker(get('p'+i)).addTo(map));
+				i++;
+			}
+			
+
+			function geoloc()
+			{
+				navigator.geolocation.getCurrentPosition(success, error,
+				{
+					enableHighAccuracy : true
+				});
+			}
+
+			setInterval(function()
+			{
+				geoloc();
+			}, 2000);
+
+			var repere;
+			var popup;
+			var tab = new Array();
+			var x = 0;
+			var p1_x = 0;var p5_x = 0;var p9_x = 0;var p13_x = 0;var p17_x = 0;var p21_x = 0;var p25_x = 0;var p29_x = 0;var p33_x = 0;var p37_x = 0;
+			var p2_x = 0;var p6_x = 0;var p10_x = 0;var p14_x = 0;var p18_x = 0;var p22_x = 0;var p26_x = 0;var p30_x = 0;var p34_x = 0;var p38_x = 0;
+			var p3_x = 0;var p7_x = 0;var p11_x = 0;var p15_x = 0;var p19_x = 0;var p23_x = 0;var p27_x = 0;var p31_x = 0;var p35_x = 0;var p39_x = 0;
+			var p4_x = 0;var p8_x = 0;var p12_x = 0;var p16_x = 0;var p20_x = 0;var p24_x = 0;var p28_x = 0;var p32_x = 0;var p36_x = 0;var p40_x = 0;
+			
+			
+			function success(position)
+			{
+
+				var lat = position.coords.latitude;
+				var lon = position.coords.longitude;
+				var latlng = L.latLng(lat, lon);
+				var zone = getZone(lat, lon);
+				//alert(tab.length);
+
+				if (x == 0)
+				{
+					repere = L.marker(latlng,
+					{
+						icon : greenIcon
+					}).addTo(map);
+					x = 1;
+				}
+				else
+				{
+					if (zone <= 40 && zone > 0 && get('p' + zone + '_x') == 0)
+					{
+						map.removeLayer(get('marker' + zone));
+						set('marker' + zone, L.marker(get('p' + zone)).addTo(map).bindPopup('<p>Vous &ecirc;tes au ' + coordonnees[zone - 1]["Numero Panneau"] + '</p>').openPopup());
+						set('p' + zone + '_x' , 1);
+						if($.inArray(zone,tab) < 0)
+							tab.push(zone);
+						map.panTo(new L.LatLng(lat, lon));
+						repere.setLatLng([lat, lon]).update();
+					}
+					else if (zone <= 40 && zone > 0 && get('p' + zone + '_x') == 1)
+					{
+						map.panTo(new L.LatLng(lat, lon));
+						repere.setLatLng([lat, lon]).update();
+					}
+					else
+					{
+						$.each(tab,function()
+						{
+								if(get('p' + this + '_x') == 1)
+								{
+									map.removeLayer(get('marker' + this));
+									set(('marker' + this) , L.marker(get('p' + this)).addTo(map));
+									set(('p' + this + '_x') , 0);
+									tab.unset(this);
+									//alert(tab);
+								}
+						});
+						map.panTo(new L.LatLng(lat, lon));
+						repere.setLatLng([lat, lon]).update();
+					}
+				}
+			}
+			
+			//calcul si les coordonnees se trouvent dans la zone du point
+			function is_around(point, lat, lon)
+			{
+				return lat > (point.lat - zone_lat) && lat < (point.lat + zone_lat) && lon > (point.lng - zone_lon) && lon < (point.lng + zone_lon);
+			}
+
+			function getZone(lat, lon)
+			{
+				var i = 1;
+				while (i <= 40 && !is_around(get('p' + i), lat, lon))
+				{
+					i++;
+				}
+				return ((i <= 40 && is_around(get('p' + i), lat, lon)) ? i : 0);
+			}
+
+			function get(v)
+			{
+				return window[v];
+			}
+
+			function set(v, val)
+			{
+				window[v] = val;
+				//alert(v + '\n\n' + val);
+			}
+
+			function error()
+			{
+				alert("erreur localisation");
+			}
+
+
+			map.locate(
+			{
+				setView : true,
+				maxZoom : 12
+			});
+
+		</script>
+	</body>
+</html>
